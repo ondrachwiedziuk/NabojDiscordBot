@@ -63,13 +63,10 @@ def send(msg):
 
 
 def error(status):
-    data = {
-        "username": config['DISCORD']["NAME"],
-        "content": str(status)
-    }
+    raise UnableToSendMessageError("Unable to send message, status: " + str(status))
 
-    return requests.post(config['DISCORD']['WEBHOOK'], json=data, headers=headers)
-
+class UnableToSendMessageError(Exception):
+    pass
 
 def worker():
     box = login()
@@ -78,7 +75,5 @@ def worker():
         if status != 204:
             error(status)
 
-
-while True:
+if __name__ == '__main__':
     worker()
-    time.sleep(300)
